@@ -333,6 +333,44 @@
   }
   footer .sign { font-family: var(--display); font-size: 1.4rem; color: var(--plum); }
 
+  /* 후원 */
+  .support-text { margin: 0 0 1.25rem; }
+  .account {
+    position: relative;
+    padding: 1.4rem 1.5rem 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--paper);
+    border: 1.5px dashed var(--lavender);
+  }
+  .account .bank { color: var(--ink-soft); font-size: .95rem; }
+  .account .number {
+    display: block;
+    margin: .15rem 0 .2rem;
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+    line-height: 1.25;
+    letter-spacing: .02em;
+    color: var(--ink);
+    -webkit-user-select: all;
+    user-select: all;
+  }
+  .account .holder { font-size: 1rem; }
+  .copy-row { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
+  .copy-btn {
+    font: inherit;
+    cursor: pointer;
+    color: var(--paper);
+    background: var(--plum);
+    border: none;
+    padding: .6rem 1.3rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    transition: background-color .2s ease;
+  }
+  .copy-btn:hover { background: var(--rose); }
+  .copy-btn.done { background: var(--rose); }
+  .copy-status { color: var(--ink-soft); font-size: .92rem; }
+
   @media (min-width: 48rem) {
     .hero { margin-top: 2rem; border-radius: 1.5rem; overflow: hidden; min-height: 44rem; }
     .t-date { grid-column: 1; }
@@ -430,9 +468,9 @@
     <section id="program" aria-labelledby="program-h">
       <h2 id="program-h">진행 순서</h2>
       <ol class="timeline">
-        <li><time>17:00</time><span class="what">입장 시작</span></li>
+        <li><time>17:30</time><span class="what">입장 시작</span></li>
         <li class="stage"><time>18:00</time><span class="what">오묘</span></li>
-        <li><time>18:20</time><span class="what">퀴즈 타임</span></li>
+        <li><time>18:20</time><span class="what">고빙 타임</span></li>
         <li class="stage"><time>18:30</time><span class="what">D15F</span></li>
         <li><time>19:00</time><span class="what">럭키드로우</span></li>
         <li class="stage"><time>19:15</time><span class="what">VANDAS</span></li>
@@ -462,7 +500,7 @@
           <li><span class="title">Ling Ling<span class="artist">검정치마</span></span></li>
           <li><span class="title">APT.<span class="artist">ROSÉ & Bruno Mars</span></span></li>
         </ol>
-        <dl class="members" aria-label="D15F 멤버">
+        <dl class="members" aria-label="오묘 멤버">
           <div><dt>보컬</dt><dd>소휘</dd></div>
           <div><dt>기타</dt><dd>시온</dd></div>
           <div><dt>베이스</dt><dd>주경</dd></div>
@@ -512,6 +550,27 @@
     </div>
   </section>
 
+  <!-- ═════════ 후원 ═════════ -->
+  <section id="support" aria-labelledby="support-h">
+    <div class="wrap">
+      <h2 id="support-h">마음 보태기</h2>
+      <p class="support-text">
+        낭만협동조합은 입장료 없이 열려요. 다만 공연을 준비하는 데 드는 비용을 조금이나마 나누고 싶어,
+        작은 후원을 조심스럽게 받고 있어요. 금액은 정해져 있지 않으니 마음이 닿는 만큼만 보태 주세요. 부담 갖지 않으셔도 괜찮아요.
+        와서 들어 주시는 것만으로도 저희에겐 충분히 큰 힘이 됩니다.
+      </p>
+      <div class="account">
+        <span class="bank">카카오뱅크</span>
+        <span class="number" id="account-number">7979-86-10724</span>
+        <span class="holder">예금주 전현호</span>
+        <div class="copy-row">
+          <button type="button" class="copy-btn" id="copy-account" data-copy="79798610724">계좌번호 복사</button>
+          <span class="copy-status" id="copy-status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═════════ 포스터 ═════════ -->
   <section id="poster" aria-labelledby="poster-h">
     <div class="wrap">
@@ -540,6 +599,53 @@
     else if (days === 0) el.textContent = '오늘 저녁 6시, 얼라이브홀에서 만나요';
     else el.textContent = '함께해 주셔서 고마웠어요';
     el.hidden = false;
+  })();
+</script>
+<script>
+  // 계좌번호 복사 (하이픈 없이 숫자만 복사해서 은행 앱에 바로 붙여넣을 수 있게)
+  (function () {
+    var btn = document.getElementById('copy-account');
+    var status = document.getElementById('copy-status');
+    var value = btn.getAttribute('data-copy');
+    var timer;
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    function done(ok) {
+      clearTimeout(timer);
+      if (ok) {
+        btn.textContent = '복사했어요';
+        btn.classList.add('done');
+        status.textContent = '은행 앱에 붙여넣기 하면 돼요';
+      } else {
+        status.textContent = '번호를 길게 눌러 직접 복사해 주세요';
+      }
+      timer = setTimeout(function () {
+        btn.textContent = '계좌번호 복사';
+        btn.classList.remove('done');
+        status.textContent = '';
+      }, 2500);
+    }
+
+    btn.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(value).then(function () { done(true); }, function () { done(fallbackCopy(value)); });
+      } else {
+        done(fallbackCopy(value));
+      }
+    });
   })();
 </script>
 </body>

@@ -335,6 +335,26 @@
 
   /* 후원 */
   .support-text { margin: 0 0 1.25rem; }
+  .kakaopay-btn {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%;
+    padding: .9rem 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: 999px;
+    background: #FEE500;
+    color: #191919;
+    font-family: var(--display);
+    font-size: 1.25rem;
+    text-decoration: none;
+    box-shadow: 0 10px 24px -16px rgba(110, 84, 135, .6);
+  }
+  .kakaopay-btn:hover { background: #F5DC00; }
+  .or {
+    display: flex; align-items: center; gap: .75rem;
+    margin: 0 0 1rem;
+    color: var(--ink-soft); font-size: .92rem;
+  }
+  .or::before, .or::after { content: ""; flex: 1; border-top: 1px dashed var(--lavender); }
   .account {
     position: relative;
     padding: 1.4rem 1.5rem 1.5rem;
@@ -555,10 +575,12 @@
     <div class="wrap">
       <h2 id="support-h">마음 보태기</h2>
       <p class="support-text">
-        낭만협동조합은 입장료 없이 열려요. 다만 공연을 준비하는 데 드는 비용을 조금이나마 나누고 싶어,
-        작은 후원을 조심스럽게 받고 있어요. 금액은 정해져 있지 않으니 마음이 닿는 만큼만 보태 주세요. 부담 갖지 않으셔도 괜찮아요.
-        와서 들어 주시는 것만으로도 저희에겐 충분히 큰 힘이 됩니다.
+        공연 재밌게 보고 계신가요? 입장료는 정말 무료예요. 정말로요.
+        그래도 박수만으론 아쉬우셨다면, 소정의 후원은 언제나 감사히 받고 있어요.
+        금액은 자유! 모인 후원금은 무대 준비하느라 고생한 친구들의 회식비가 됩니다.
       </p>
+      <a class="kakaopay-btn" href="https://qr.kakaopay.com/Ej8W2sIL0" target="_blank" rel="noopener">카카오페이로 후원하기</a>
+      <p class="or">또는 계좌로 보내기</p>
       <div class="account">
         <span class="bank">카카오뱅크</span>
         <span class="number" id="account-number">7979-86-10724</span>

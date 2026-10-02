@@ -564,7 +564,7 @@
         <span class="number" id="account-number">7979-86-10724</span>
         <span class="holder">예금주 전현호</span>
         <div class="copy-row">
-          <button type="button" class="copy-btn" id="copy-account" data-copy="79798610724">계좌번호 복사</button>
+          <button type="button" class="copy-btn" id="copy-account" data-copy="카카오뱅크 7979-86-10724">계좌번호 복사</button>
           <span class="copy-status" id="copy-status" role="status" aria-live="polite"></span>
         </div>
       </div>
@@ -602,7 +602,7 @@
   })();
 </script>
 <script>
-  // 계좌번호 복사 (하이픈 없이 숫자만 복사해서 은행 앱에 바로 붙여넣을 수 있게)
+  // 계좌번호 복사: '은행명 + 계좌번호' 형식이어야 은행 앱이 클립보드의 계좌를 자동으로 알아봐요
   (function () {
     var btn = document.getElementById('copy-account');
     var status = document.getElementById('copy-status');
@@ -610,16 +610,28 @@
     var timer;
 
     function fallbackCopy(text) {
+      // iOS 사파리와 카카오톡 등 앱 내 브라우저용 대체 방식
       var ta = document.createElement('textarea');
       ta.value = text;
-      ta.setAttribute('readonly', '');
+      ta.contentEditable = 'true';
+      ta.readOnly = false;
       ta.style.position = 'fixed';
+      ta.style.top = '0';
+      ta.style.left = '0';
+      ta.style.fontSize = '16px';
       ta.style.opacity = '0';
       document.body.appendChild(ta);
-      ta.select();
+      var range = document.createRange();
+      range.selectNodeContents(ta);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ta.focus();
+      ta.setSelectionRange(0, text.length);
       var ok = false;
       try { ok = document.execCommand('copy'); } catch (e) {}
       document.body.removeChild(ta);
+      sel.removeAllRanges();
       return ok;
     }
 
@@ -628,7 +640,7 @@
       if (ok) {
         btn.textContent = '복사했어요';
         btn.classList.add('done');
-        status.textContent = '은행 앱에 붙여넣기 하면 돼요';
+        status.textContent = '은행 앱의 송금 화면에서 사용해 주세요';
       } else {
         status.textContent = '번호를 길게 눌러 직접 복사해 주세요';
       }
